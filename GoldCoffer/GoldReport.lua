@@ -89,7 +89,6 @@ function ns:ShowReport()
 		local s = ns:GetServers();
 		for i=1, #s do
 			--check the current server and uncheck all others
-			print(i, s[i])
 			if ns.srv == s[i] then cb[i]:SetChecked(true); else cb[i]:SetChecked(false); end;
 			cbText[i]:SetText(s[i] .. " - " ..  ns:GoldSilverCopper(ns:GetServerGold(s[i])));
 			cb[i]:Show();
