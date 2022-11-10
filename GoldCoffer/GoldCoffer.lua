@@ -1,4 +1,3 @@
-
 local addon, ns = ...
 local icon = LibStub("LibDBIcon-1.0", true);
 GoldCofferIcon = GoldCofferIcon or {};
@@ -9,7 +8,7 @@ ns.totalGold = 0;
 local function minimapButtonShowHide(toggle)
 	--if toggle is true just flip visibility.
 	if toggle then mmButtonShown = not mmButtonShown; end;
-	--if toggle is false adjust vivibility to saved ststus
+	--if toggle is false adjust visibility to saved status
 	if toggle == false then
 		if GoldCofferIcon.Visible == nil then  GoldCofferIcon.Visible = true; end;
 		mmButtonShown = GoldCofferIcon.Visible;
@@ -29,9 +28,9 @@ local function GoldCofferMiniMap(button)
 		if IsShiftKeyDown() then
 			minimapButtonShowHide(true)
 		elseif IsControlKeyDown() then	
-			--Placeholder
+			--placeholder
 		else
-			ns:ShowReport();
+			ns:ShowGoldReport();
 		end;
 	elseif button == "RightButton" then
 		--resets window position
@@ -54,10 +53,18 @@ function gcLDB:OnTooltipShow()
 	self:AddLine(ns.player .. " - " .. ns:GoldSilverCopper(GetMoney()));
 	self:AddLine(ns.srv .. " - " .. ns:GetServerGold(ns.srv, true) .. "\n\n");
 	
-	self:AddLine("Profit/loss this session = " .. ns:GetTodaysChange());
-	self:AddLine("Since yesterday = " .. ns:GetYesterdaysChange());
-	self:AddLine("This week = " .. ns:GetWeeksChange() .. "\n\n");
-	self:AddLine("Total gold(all servers) = " .. ns:GetTotalGold(true));
+	self:AddLine("Profit/loss this session = " .. ns:GetSessionChange());
+	self:AddLine("Today = " .. ns:GetYesterdaysChange());
+	self:AddLine("This Week = " .. ns:GetWeeksChange());
+	self:AddLine("This Month = " .. ns:GetMonthsChange());
+	self:AddLine("This Year = " .. ns:GetYearsChange() .. "\n\n");	
+	
+	self:AddLine("Total Gold Yesterday = " .. ns:GetYesterdaysGold(true));
+	self:AddLine("Last Week = " .. ns:GetLastWeeksGold(true));
+	self:AddLine("Last Month = " .. ns:GetLastMonthsGold(true));
+	self:AddLine("Last Year = " .. ns:GetLastYearsGold(true));
+	
+	self:AddLine("\nTotal gold(all servers) = " .. ns:GetTotalGold(true));
 	
 end
 function gcLDB:OnEnter()	
@@ -110,7 +117,6 @@ SlashCmdList.GOLDCOFFER = function(arg)
 	elseif msg == "c" or msg == "center" or msg == "centre"	then		--including British spelling
 		ns:CenterGoldReport();
 	else
-		print (arg1, arg2, arg3)
 		local s = "/gc or /goldcoffer shows report.\n" 	
 			.. "/gc delete Toon Server - Deletes a single toon.\n"
 			.. "/gc mm or button - toggle minimap button (on/off)\n"
@@ -120,7 +126,7 @@ SlashCmdList.GOLDCOFFER = function(arg)
 			.. "/gc ?  - Show help."		
 		print (s);
 	end;
-end
+end; --/ Slash Commands
 
 --event frame
 local f = CreateFrame("FRAME");
@@ -132,7 +138,7 @@ function f:OnEvent(event, ...)
 		--Minimap button
 		icon:Register(addon, gcLDB, GoldCofferIcon);
 		minimapButtonShowHide(false);
-		ns:updateGold();	--initialize data
+		ns:iniData();	--initialize data
 		GoldCoffer.History.Today = ns:GetTotalGold(false);
 		f:UnregisterEvent("PLAYER_ENTERING_WORLD");
 	end;	
@@ -144,8 +150,3 @@ f:SetScript("OnEvent", f.OnEvent);
 
 		
 		
-		
-
-
-
-
