@@ -1,3 +1,6 @@
+v1.2.0
+- Added more history to minimap button tooltip
+
 v1.0.3
 - Added Wrath version
 
