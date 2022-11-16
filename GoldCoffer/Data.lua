@@ -310,21 +310,21 @@ end;
 function ns:GetYesterdaysChange()
 	--Returns Profit/Loss since yesterday
 	local diff = ns:GetTotalGold(false) - ns:GetYesterdaysGold(false);
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 
 function ns:GetWeeksChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastWeeksGold(false);
-	return ProfitLossColoring(diff);	
+	return ns:ProfitLossColoring(diff);	
 end;
 
 function ns:GetMonthsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastMonthsGold(false);
-	return ProfitLossColoring(diff);	
+	return ns:ProfitLossColoring(diff);	
 end;
 
 function ns:GetYearsChange()
 	local diff = ns:GetTotalGold(false) - ns:GetLastYearsGold(false);
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 
