@@ -304,7 +304,7 @@ function ns:GetSessionChange()
 	--returns Profit/Loss this session
 	local curGold = ns:GetTotalGold(false);
 	local diff = curGold - GoldCoffer.History.Today;
-	return ProfitLossColoring(diff);
+	return ns:ProfitLossColoring(diff);
 end;
 
 function ns:GetYesterdaysChange()
