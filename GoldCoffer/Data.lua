@@ -231,7 +231,7 @@ function ns:GetServers()
 end;
 
 
-local function ProfitLossColoring(gold)
+function ns:ProfitLossColoring(gold)
 	if gold < 0 then return ns:colorString("red", ns:GoldSilverCopper(gold)); end;
 	return ns:colorString("green", ns:GoldSilverCopper(gold));
 end;
