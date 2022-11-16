@@ -267,7 +267,7 @@ end;
 function ns:GetYesterdaysGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Day["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -276,7 +276,7 @@ end;
 function ns:GetLastWeeksGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Week["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -285,7 +285,7 @@ end;
 function ns:GetLastMonthsGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Month["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
@@ -294,7 +294,7 @@ end;
 function ns:GetLastYearsGold(formatFlag)
 	--Returns closing balance the last day played
 	for _,v in pairs (GoldCoffer.History.Year["2"]) do
-		if formatFlag then return ProfitLossColoring(v)
+		if formatFlag then return ns:ProfitLossColoring(v)
 		else return v; end;
 	end;
 	return 0;
