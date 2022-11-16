@@ -204,7 +204,7 @@ TabSummery.RightText = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNor
 TabSummery.RightText:SetPoint("TOPLEFT", TabSummery.LeftText, "TOPRIGHT");
 TabSummery.RightText:SetWidth(300);
 
-TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabSummery.Footer = TabSummery:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabSummery.Footer:SetPoint("TOPLEFT", TabSummery.LeftText, "BOTTOMLEFT");
 TabSummery.Footer:SetWidth(600);
 TabSummery.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
@@ -222,15 +222,21 @@ TabSummery:SetScript( "OnShow", function() TabSummery.tabShow(); end);
 --------------------------------------------------------------------------------------------------
 function TabDaily.tabShow()
 	local h = "Daily History"			
-	local l, m, r = "Date", "Days Closing Gold", "Profit/Loss from Previous Day"
-	local days = GoldCoffer.History.Day
-	print(#GoldCoffer.History.Day)
-	for i=1, #days do
-		for k,v in pairs(days[i]) do
-			print(k)
-			l = l .. "\n" .. k;
-		end; --/k,v in pairs
-	end;	--/for i
+	local l, m, r = "Date\n", "Days Closing Gold\n", "Daily Gain/Loss\n"
+	local i = "1";
+	local gt = 0;
+	local prev = -1;
+	while (GoldCoffer.History.Day[i] ~= nil) do	
+		for d,g in pairs(GoldCoffer.History.Day[i]) do
+			l = l .. "\n" .. d;
+			m = m .. "\n" .. ns:ProfitLossColoring(g);
+			if prev > -1 then
+				r = r .. "\n" .. ns:ProfitLossColoring(prev - g);
+			end;
+			prev = g;
+		end; --/in pairs
+		i = tostring(tonumber(i) + 1);
+	end;	--/while
 	TabDaily.Header:SetText(h);	
 	TabDaily.LeftText:SetText(l);
 	TabDaily.MiddleText:SetText(m);
@@ -244,23 +250,24 @@ TabDaily.Header:SetText("");
 
 TabDaily.LeftText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.LeftText:SetPoint("TOPLEFT", TabDaily.Header, "BOTTOMLEFT", 0, -30);
-TabDaily.LeftText:SetWidth(200);
+TabDaily.LeftText:SetWidth(130);
 TabDaily.LeftText:SetJustifyH("LEFT");
 
 TabDaily.MiddleText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.MiddleText:SetPoint("TOPLEFT", TabDaily.LeftText, "TOPRIGHT");
-TabDaily.MiddleText:SetWidth(200);
+TabDaily.MiddleText:SetWidth(235);
 TabDaily.MiddleText:SetJustifyH("RIGHT");
 
 TabDaily.RightText = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabDaily.RightText:SetPoint("TOPLEFT", TabDaily.MiddleText, "TOPRIGHT");
-TabDaily.RightText:SetWidth(200);
+TabDaily.RightText:SetWidth(235);
 TabDaily.RightText:SetJustifyH("RIGHT");
 
-TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabDaily.Footer = TabDaily:CreateFontString (nil, "OVERLAY", "GameFontNormal");
 TabDaily.Footer:SetPoint("TOPLEFT", TabDaily.LeftText, "BOTTOMLEFT", 0, -30);
 TabDaily.Footer:SetWidth(600);
-TabDaily.Footer:SetText("* Last Week/Month/Year will show 0 until enough data is collected.");
+TabDaily.Footer:SetJustifyH("LEFT");
+TabDaily.Footer:SetText("");
 
 
 TabDaily:SetScript( "OnShow", function() TabDaily.tabShow(); end);
@@ -274,22 +281,53 @@ TabDaily:SetScript( "OnShow", function() TabDaily.tabShow(); end);
 --			TabWeekly
 --------------------------------------------------------------------------------------------------
 function TabWeekly.tabShow()
-	local h = "Weekly History";			
-	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
-			"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
-			"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
-			"This Year\n" .. ns:GetYearsChange() .. "\n\n\n";		
-	local r = "Total Gold Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
-			"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
-			"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
-			"Last Year\n" .. ns:GetLastYearsGold(true);	
+	local h = "Weekly History";	
+	local l, m, r = "Date\n", "Weeks Closing Gold\n", "Weekly Gain/Loss\n"
+	local i = "1";
+	local gt = 0;
+	local prev = -1;
+	while (GoldCoffer.History.Week[i] ~= nil) do	
+		for d,g in pairs(GoldCoffer.History.Week[i]) do
+			l = l .. "\n" .. d;
+			m = m .. "\n" .. ns:ProfitLossColoring(g);
+			if prev > -1 then
+				r = r .. "\n" .. ns:ProfitLossColoring(prev - g);
+			end;
+			prev = g;
+		end; --/in pairs
+		i = tostring(tonumber(i) + 1);
+	end;	--/while
 	TabWeekly.Header:SetText(h);	
+	TabWeekly.LeftText:SetText(l);
+	TabWeekly.MiddleText:SetText(m);
+	TabWeekly.RightText:SetText(r);		
 end;
 
 TabWeekly.Header = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabWeekly.Header:SetPoint("TOPLEFT", TabWeekly, "TOPLEFT", 30, -25);
 TabWeekly.Header:SetWidth(600);
 TabWeekly.Header:SetText("");
+
+TabWeekly.LeftText = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabWeekly.LeftText:SetPoint("TOPLEFT", TabWeekly.Header, "BOTTOMLEFT", 0, -30);
+TabWeekly.LeftText:SetWidth(130);
+TabWeekly.LeftText:SetJustifyH("LEFT");
+
+TabWeekly.MiddleText = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabWeekly.MiddleText:SetPoint("TOPLEFT", TabWeekly.LeftText, "TOPRIGHT");
+TabWeekly.MiddleText:SetWidth(235);
+TabWeekly.MiddleText:SetJustifyH("RIGHT");
+
+TabWeekly.RightText = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabWeekly.RightText:SetPoint("TOPLEFT", TabWeekly.MiddleText, "TOPRIGHT");
+TabWeekly.RightText:SetWidth(235);
+TabWeekly.RightText:SetJustifyH("RIGHT");
+
+TabWeekly.Footer = TabWeekly:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabWeekly.Footer:SetPoint("TOPLEFT", TabWeekly.LeftText, "BOTTOMLEFT", 0, -30);
+TabWeekly.Footer:SetWidth(600);
+TabWeekly.Footer:SetJustifyH("LEFT");
+TabWeekly.Footer:SetText("* These dates may be off as you first start using this addon, also if you have gaps in your playtime.");
 
 TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
 --------------------------------------------------------------------------------------------------
@@ -302,22 +340,53 @@ TabWeekly:SetScript( "OnShow", function() TabWeekly.tabShow(); end);
 --			TabYearly
 --------------------------------------------------------------------------------------------------
 function TabYearly.tabShow()
-	local h = "Yearly History";
-	local l = "Profit/loss this session\n" .. ns:GetSessionChange() .. "\n\n" .. 
-			"Today\n" .. ns:GetYesterdaysChange() .. "\n\n" .. 
-			"This Week\n" .. ns:GetWeeksChange() .. "\n\n" .. 
-			"This Year\n" .. ns:GetYearsChange() .. "\n\n\n";		
-	local r = "Total Gold Yesterday\n" .. ns:GetYesterdaysGold(true) .. "\n\n" .. 
-			"Last Week\n" .. ns:GetLastWeeksGold(true) .. "\n\n" .. 
-			"Last Month\n" .. ns:GetLastMonthsGold(true) .. "\n\n" .. 
-			"Last Year\n" .. ns:GetLastYearsGold(true);	
+	local h = "Yearly History";	
+	local l, m, r = "Date\n", "Years Closing Gold\n", "Yearly Gain/Loss\n"
+	local i = "1";
+	local gt = 0;
+	local prev = -1;
+	while (GoldCoffer.History.Year[i] ~= nil) do	
+		for d,g in pairs(GoldCoffer.History.Year[i]) do
+			l = l .. "\n" .. d;
+			m = m .. "\n" .. ns:ProfitLossColoring(g);
+			if prev > -1 then
+				r = r .. "\n" .. ns:ProfitLossColoring(prev - g);
+			end;
+			prev = g;
+		end; --/in pairs
+		i = tostring(tonumber(i) + 1);
+	end;	--/while
 	TabYearly.Header:SetText(h);	
+	TabYearly.LeftText:SetText(l);
+	TabYearly.MiddleText:SetText(m);
+	TabYearly.RightText:SetText(r);		
 end;
 
 TabYearly.Header = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
 TabYearly.Header:SetPoint("TOPLEFT", TabYearly, "TOPLEFT", 30, -25);
 TabYearly.Header:SetWidth(600);
 TabYearly.Header:SetText("");
+
+TabYearly.LeftText = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabYearly.LeftText:SetPoint("TOPLEFT", TabYearly.Header, "BOTTOMLEFT", -15, -30);
+TabYearly.LeftText:SetWidth(175);
+TabYearly.LeftText:SetJustifyH("LEFT");
+
+TabYearly.MiddleText = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabYearly.MiddleText:SetPoint("TOPLEFT", TabYearly.LeftText, "TOPRIGHT");
+TabYearly.MiddleText:SetWidth(235);
+TabYearly.MiddleText:SetJustifyH("RIGHT");
+
+TabYearly.RightText = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormalLarge");
+TabYearly.RightText:SetPoint("TOPLEFT", TabYearly.MiddleText, "TOPRIGHT");
+TabYearly.RightText:SetWidth(235);
+TabYearly.RightText:SetJustifyH("RIGHT");
+
+TabYearly.Footer = TabYearly:CreateFontString (nil, "OVERLAY", "GameFontNormal");
+TabYearly.Footer:SetPoint("TOPLEFT", TabYearly.LeftText, "BOTTOMLEFT", 15, -30);
+TabYearly.Footer:SetWidth(600);
+TabYearly.Footer:SetJustifyH("LEFT");
+TabYearly.Footer:SetText("* The first time you use this addon the previous year is recorded as 0.");
 
 TabYearly:SetScript( "OnShow", function() TabYearly.tabShow(); end);
 --------------------------------------------------------------------------------------------------
