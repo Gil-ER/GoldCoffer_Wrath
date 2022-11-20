@@ -1,5 +1,6 @@
 ## Interface: 11403
-## Title: Gold Coffer Classic v1.2.1
+## Title: Gold Coffer Classic
+## Notes: Tracks your current gold on your account with comparisons and history.
 ## DefaultState: enabled
 ## Version: 1.2.1
 ## Author: Gildina
