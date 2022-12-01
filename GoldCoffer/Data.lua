@@ -197,7 +197,9 @@ function ns:iniData()
 	GoldCoffer.History.Resets.Day = GoldCoffer.History.Resets.Day or resetDay;
 	GoldCoffer.History.Resets.Week = GoldCoffer.History.Resets.Week or resetWeek;
 	GoldCoffer.History.Resets.Month = GoldCoffer.History.Resets.Month or resetMonth;
+	if GoldCoffer.History.Resets.Month > resetMonth then GoldCoffer.History.Resets.Month = resetMonth; end;
 	GoldCoffer.History.Resets.Year = GoldCoffer.History.Resets.Year or resetYear;
+	if GoldCoffer.History.Resets.Year > resetYear then GoldCoffer.History.Resets.Year = resetYear; end;
 
 	GoldCoffer.History.Day = GoldCoffer.History.Day or {["1"] = {[key1] = curGold}};
 	GoldCoffer.History.Week = GoldCoffer.History.Week or {["1"] = {[key1] = curGold}};
