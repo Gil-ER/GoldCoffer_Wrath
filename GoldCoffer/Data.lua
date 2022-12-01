@@ -22,31 +22,38 @@ local saveYears = 10;
 
 local function GetNextMonthTime(t)
 	--returns the next time of the start of the next month
-	local ret = t;
-	local sub = 1000000;
-	local m = date("%m", t) + 1;
-	while sub > 1 do
-		while m > tonumber(date("%m", ret)) do
-			ret = ret + sub;
+	local ret = t;							--Set return to current time
+	local chunk = 1000000;					--chunk of time used in calculation
+	local m = tonumber(date("%m", t)) + 1;	--Current month + 1
+	if m == 13 then m = 1; end;				--Correct for year roll over
+	while chunk > 1 do
+		while m ~= tonumber(date("%m", ret)) do
+			--loop through adding time until month changes
+			ret = ret + chunk;
 		end;
-		ret = ret - sub;
-		sub = floor(sub /10);
+		ret = ret - chunk;					--ret is too big, roll it back 1 chunk
+		chunk = floor(chunk /10);				--reduce the size of chunk
 	end;
+	--ret is now 12:59 the same month so add 60 seconds
+	ret = ret + 60;	
 	return ret;
 end;
 
 local function GetNextYearTime(t)
 	--returns the time at the start of the next year
-	local ret = t;
-	local sub = 10000000;
-	local m = date("%m", t) + 1;
-	while sub > 1 do
-		while m > tonumber(date("%m", ret)) do
-			ret = ret + sub;
+	local ret = t;							--Set return to current time
+	local chunk = 10000000;					--chunk of time used in calculation
+	local m = date("%Y", t) + 1;			-- current year + 1
+	while chunk > 1 do
+		--loop through until the year changes
+		while m > tonumber(date("%Y", ret)) do
+			ret = ret + chunk;
 		end;
-		ret = ret - sub;
-		sub = floor(sub /10);
+		ret = ret - chunk;					--ret is too big, roll it back 1 chunk
+		chunk = floor(chunk /10);			--reduce the size of chunk
 	end;
+	--ret is now 12:59 the same year so add 60 seconds
+	ret = ret + 60;
 	return ret;
 end;
 
